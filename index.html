@@ -132,7 +132,15 @@
     th, td { padding: 8px 6px; font-size: 0.85rem; }
     .scorecard { font-size: 0.8rem; }
     .score-input { width: 30px; }
-    .gspro-logo { position: static; display: block; margin: 0 auto 12px; height: 36px; }
+    .gspro-logo {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    height: 40px;
+    width: auto;
+    background: transparent;
+  }
+  .gspro-sticker-old { position: static; display: inline-block; margin-bottom: 8px; }
     .trophy { width: 140px; }
   }
 </style>
@@ -235,7 +243,7 @@
       <ul style="margin-left:20px; margin-bottom:16px;">
         <li><strong>12 total players</strong> in the league</li>
         <li><strong>Maximum 8 players per week</strong> (GSPro Local Match limit)</li>
-        <li>RSVP required each week so we know who is playing</li>
+        <li>A text goes out every Monday of a league week at 8:00 AM asking who is available</li>
         <li>12 regular-season weeks + Championship Week on Feb 25</li>
         <li>9-hole stroke play (net scores used for points)</li>
         <li>Best <strong>6</strong> weekly point totals count toward final regular-season standings</li>
@@ -243,9 +251,9 @@
         <li>February 25 is Championship Week (separate from regular-season points)</li>
       </ul>
       <h3>Weekly Spots & RSVP</h3>
-      <p>Because GSPro supports a maximum of 8 players in a single Local Match, only 8 spots are available each Thursday. Please RSVP by Wednesday evening so we can confirm the group. If more than 8 reply, priority goes to players who sat out the previous week, then regular attendees, then first-come.</p>
+      <p>Because GSPro supports a maximum of 8 players in a single Local Match, only 8 spots are available each Thursday. A text will go out every Monday of a league week at 8:00 AM asking who is available to play. If more than 8 reply, priority goes to players who sat out the previous week, then first-come.</p>
       <h3>Handicaps</h3>
-      <p>Starting handicaps: Dan Gudz 17, Todd Brown 3, all others TBD (will be updated as real numbers are provided). Net scores = Gross – Handicap (adjusted for 9 holes). Handicaps can be adjusted during the season based on play.</p>
+      <p>Starting handicaps are loaded in Week 1. If you do not have a handicap, you will be assigned a handicap of 20. GSPro will track and update handicaps moving forward based on results from the league. Handicaps will be used for purposes of Net Scores.</p>
       <h3>Scoring</h3>
       <p><strong>Max score per hole is double par.</strong> Once you reach double par on a hole, pick up and move on (e.g., par 4 max = 8, par 3 max = 6, par 5 max = 10).</p>
       <p>Points awarded each week based on finishing position (net score). Final regular-season standings use each player’s top 6 weekly point totals. Absences do not count as zeros — only the weeks you play matter, and only your best 6 of those count. Championship Week on Feb 25 is separate.</p>
@@ -281,16 +289,16 @@ const leagueData = {
   players: [
     { name: "Dan Gudz", hcp: 17, weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Tim Isgro", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Mat Zatarain", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Mat Zatarain", hcp: 14, weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Casey Mayo", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Todd Brown", hcp: 3, weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Danny Cwiklik", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Rick Markowski", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Rick Markowski", hcp: 24, weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Dave Mann", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Luke Thompson", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Doug Ruffing", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Nick Hirth", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Jamie Belanger", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] }
+    { name: "Nick Hirth", hcp: 3, weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Jamie Belanger", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 }
   ],
   schedule: [
     { week: 1, date: "Nov 12, 2026", course: "Georgia Golf Club (Augusta) – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/mOLTx.jpg" },
@@ -327,6 +335,7 @@ function show(section) {
 
 function renderLeaderboard() {
   const tbody = document.querySelector('#leaderboard-table tbody');
+  // Sort by total points (top 6 only, calculated below)
   const playersWithTotals = leagueData.players.map(p => {
     const weekly = p.weeklyPoints || Array(12).fill(null);
     const played = weekly.filter(s => s !== null && s !== 'DNP');
@@ -393,6 +402,7 @@ function renderResults() {
 
 function renderCurrentWeek() {
   const cw = leagueData.currentWeek;
+  // Set course image from schedule
   const sched = leagueData.schedule.find(s => s.week === cw.week);
   const img = document.getElementById('current-week-image');
   if (sched && sched.image && img) {
@@ -441,11 +451,23 @@ function updateScore(input) {
   outEl.innerHTML = filled ? `<strong>${total}</strong>` : '<strong>-</strong>';
 }
 
+function updateHcp(input) {
+  const name = input.dataset.player;
+  const player = leagueData.players.find(p => p.name === name);
+  if (player) {
+    const val = input.value.trim();
+    player.hcp = isNaN(val) || val === '' ? val : Number(val);
+    try { localStorage.setItem('leagueHcp_' + name, player.hcp); } catch(e) {}
+  }
+}
+
 function loadSavedHcps() {
-  leagueData.players.forEach(p => {
-    const saved = localStorage.getItem('leagueHcp_' + p.name);
-    if (saved !== null) p.hcp = isNaN(saved) ? saved : Number(saved);
-  });
+  try {
+    leagueData.players.forEach(p => {
+      const saved = localStorage.getItem('leagueHcp_' + p.name);
+      if (saved !== null) p.hcp = isNaN(saved) ? saved : Number(saved);
+    });
+  } catch(e) {}
 }
 
 loadSavedHcps();
