@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- pages redeploy -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -92,6 +91,12 @@
   .week-card h3 { display: flex; justify-content: space-between; align-items: center; }
   .status-upcoming { color: #f0c674; }
   .status-complete { color: var(--accent); }
+  .signup-list { list-style: none; }
+  .signup-list li { padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .maybe { color: #f0c674; }
+  .scorecard th, .scorecard td { text-align: center; padding: 10px 6px; min-width: 40px; }
+  .scorecard th:first-child, .scorecard td:first-child { text-align: left; min-width: 140px; }
+  .score-input { width: 36px; background: #0f1419; color: var(--text); border: 1px solid var(--border); border-radius: 4px; text-align: center; padding: 4px; }
   footer {
     text-align: center;
     color: var(--muted);
@@ -101,6 +106,8 @@
   @media (max-width: 600px) {
     header h1 { font-size: 1.7rem; }
     th, td { padding: 8px 6px; font-size: 0.85rem; }
+    .scorecard { font-size: 0.8rem; }
+    .score-input { width: 30px; }
   }
 </style>
 </head>
@@ -114,6 +121,7 @@
 
   <nav>
     <button class="active" onclick="show('leaderboard')">Leaderboard</button>
+    <button onclick="show('current')">Current Week</button>
     <button onclick="show('schedule')">Schedule & Courses</button>
     <button onclick="show('results')">Weekly Results</button>
     <button onclick="show('rules')">Rules & Info</button>
@@ -137,6 +145,33 @@
         </thead>
         <tbody></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- CURRENT WEEK -->
+  <div id="current" class="section">
+    <div class="card">
+      <h2>Current Week</h2>
+      <p style="font-size:1.1rem; margin-bottom:16px;"><strong>Week 1 – Nov 12, 2026 – Georgia Golf Club (Augusta) Front 9</strong></p>
+      <h3>Signed Up <span class="badge">5 confirmed</span> <span class="badge maybe">1 maybe</span></h3>
+      <ul class="signup-list" id="signup-list"></ul>
+      <p class="note">3 spots still open. Danny is a maybe.</p>
+    </div>
+    <div class="card">
+      <h2>Scorecard – Augusta Front 9</h2>
+      <div style="overflow-x:auto;">
+        <table class="scorecard" id="scorecard">
+          <thead>
+            <tr>
+              <th>Hole</th>
+              <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th>
+              <th>OUT</th>
+            </tr>
+          </thead>
+          <tbody id="scorecard-body"></tbody>
+        </table>
+      </div>
+      <p class="note">Enter scores in the boxes. Totals update automatically. Par is set for Augusta Front 9 (adjust if needed).</p>
     </div>
   </div>
 
@@ -242,7 +277,15 @@ const leagueData = {
     { week: 12, date: "Feb 18, 2027", course: "Cabot Cliffs – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/hkBTT.jpg" },
     { week: "Championship", date: "Feb 25, 2027", course: "Georgia Golf Club (Augusta) – Back 9", status: "Championship", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/VfF59.jpg" }
   ],
-  results: []
+  results: [],
+  currentWeek: {
+    week: 1,
+    date: "Nov 12, 2026",
+    course: "Georgia Golf Club (Augusta) – Front 9",
+    confirmed: ["Dan Gudz", "Jamie Belanger", "Todd Brown", "Rick Markowski", "Luke Thompson"],
+    maybe: ["Danny Cwiklik"],
+    par: [4, 5, 4, 3, 4, 3, 4, 5, 4] // Augusta Front 9 pars (adjust as needed)
+  }
 };
 
 // ==================== RENDER FUNCTIONS ====================
@@ -299,6 +342,51 @@ function renderResults() {
   `).join('');
 }
 
+function renderCurrentWeek() {
+  const cw = leagueData.currentWeek;
+  const list = document.getElementById('signup-list');
+  const allPlaying = [...cw.confirmed, ...cw.maybe];
+  list.innerHTML = [
+    ...cw.confirmed.map(name => {
+      const p = leagueData.players.find(x => x.name === name);
+      return `<li><span>${name}</span><span>(${p ? p.hcp : 'TBD'})</span></li>`;
+    }),
+    ...cw.maybe.map(name => {
+      const p = leagueData.players.find(x => x.name === name);
+      return `<li class="maybe"><span>${name} (maybe)</span><span>(${p ? p.hcp : 'TBD'})</span></li>`;
+    })
+  ].join('');
+
+  const tbody = document.getElementById('scorecard-body');
+  const parTotal = cw.par.reduce((a,b)=>a+b,0);
+  let html = `<tr><td><strong>Par</strong></td>${cw.par.map(p=>`<td>${p}</td>`).join('')}<td><strong>${parTotal}</strong></td></tr>`;
+
+  allPlaying.forEach(name => {
+    const p = leagueData.players.find(x => x.name === name);
+    const hcp = p ? p.hcp : 'TBD';
+    const isMaybe = cw.maybe.includes(name);
+    html += `<tr${isMaybe ? ' style="opacity:0.75"' : ''}>
+      <td>${name}${isMaybe ? ' (maybe)' : ''} (${hcp})</td>
+      ${cw.par.map((_,i)=>`<td><input type="number" class="score-input" data-player="${name}" data-hole="${i}" min="1" max="15" onchange="updateScore(this)"></td>`).join('')}
+      <td id="out-${name.replace(/\s+/g,'')}"><strong>-</strong></td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+function updateScore(input) {
+  const player = input.dataset.player;
+  const inputs = document.querySelectorAll(`input[data-player="${player}"]`);
+  let total = 0;
+  let filled = 0;
+  inputs.forEach(inp => {
+    const v = parseInt(inp.value);
+    if (!isNaN(v)) { total += v; filled++; }
+  });
+  const outEl = document.getElementById('out-' + player.replace(/\s+/g,''));
+  outEl.innerHTML = filled ? `<strong>${total}</strong>` : '<strong>-</strong>';
+}
+
 function updateHcp(input) {
   const name = input.dataset.player;
   const player = leagueData.players.find(p => p.name === name);
@@ -321,6 +409,7 @@ loadSavedHcps();
 renderLeaderboard();
 renderSchedule();
 renderResults();
+renderCurrentWeek();
 </script>
 </body>
 </html>
