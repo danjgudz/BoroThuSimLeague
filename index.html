@@ -165,7 +165,6 @@
           <tr>
             <th>Pos</th>
             <th>Player</th>
-            <th>HCP</th>
             <th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W5</th><th>W6</th>
             <th>W7</th><th>W8</th><th>W9</th><th>W10</th><th>W11</th><th>W12</th>
             <th>Total</th>
@@ -244,7 +243,7 @@
       <h3>Weekly Spots & RSVP</h3>
       <p>Because GSPro supports a maximum of 8 players in a single Local Match, only 8 spots are available each Thursday. Please RSVP by Wednesday evening so we can confirm the group. If more than 8 reply, priority goes to players who sat out the previous week, then regular attendees, then first-come.</p>
       <h3>Handicaps</h3>
-      <p>Starting handicaps: Dan Gudz 17, Todd Brown 3, all others TBD (will be updated as real numbers are provided). Net scores = Gross – Handicap (adjusted for 9 holes). Handicaps can be adjusted during the season based on play. You can edit handicaps directly on the leaderboard.</p>
+      <p>Starting handicaps: Dan Gudz 17, Todd Brown 3, all others TBD (will be updated as real numbers are provided). Net scores = Gross – Handicap (adjusted for 9 holes). Handicaps can be adjusted during the season based on play.</p>
       <h3>Scoring</h3>
       <p><strong>Max score per hole is double par.</strong> Once you reach double par on a hole, pick up and move on (e.g., par 4 max = 8, par 3 max = 6, par 5 max = 10).</p>
       <p>Points awarded each week based on finishing position (net score). Final regular-season standings use each player’s top 6 weekly point totals. Absences do not count as zeros — only the weeks you play matter, and only your best 6 of those count. Championship Week on Feb 25 is separate.</p>
@@ -352,8 +351,7 @@ function renderLeaderboard() {
     return `
     <tr>
       <td class="pos">${i + 1}</td>
-      <td>${p.name} <span style="color:#8b9bb4; font-size:0.85em;">(<input type="text" value="${p.hcp}" data-player="${p.name}" onchange="updateHcp(this)" style="width:50px; background:#0f1419; color:#e8eef4; border:1px solid #2a3a4d; border-radius:4px; padding:2px 4px; text-align:center;">)</span></td>
-      <td>${p.hcp}</td>
+      <td>${p.name} <span style="color:#8b9bb4; font-size:0.85em;">(${p.hcp})</span></td>
       ${cells}
       <td><strong>${p.total}</strong></td>
     </tr>`;
@@ -433,16 +431,6 @@ function updateScore(input) {
   });
   const outEl = document.getElementById('out-' + player.replace(/\s+/g,''));
   outEl.innerHTML = filled ? `<strong>${total}</strong>` : '<strong>-</strong>';
-}
-
-function updateHcp(input) {
-  const name = input.dataset.player;
-  const player = leagueData.players.find(p => p.name === name);
-  if (player) {
-    const val = input.value.trim();
-    player.hcp = isNaN(val) || val === '' ? val : Number(val);
-    localStorage.setItem('leagueHcp_' + name, player.hcp);
-  }
 }
 
 function loadSavedHcps() {
