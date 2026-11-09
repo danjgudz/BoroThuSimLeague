@@ -17,22 +17,44 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg);
+    background: #0f1419 url('https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/mOLTx.jpg') center/cover fixed no-repeat;
     color: var(--text);
     line-height: 1.5;
     padding: 16px;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 20, 25, 0.82);
+    z-index: -1;
   }
   .container { max-width: 1100px; margin: 0 auto; }
   header {
     text-align: center;
     padding: 32px 16px 24px;
-    background: linear-gradient(135deg, #1a2332 0%, #0f1c2e 100%);
+    background: linear-gradient(135deg, rgba(26,35,50,0.95) 0%, rgba(15,28,46,0.95) 100%);
     border-radius: 16px;
     margin-bottom: 24px;
     border: 1px solid var(--border);
+    position: relative;
   }
   header h1 { font-size: 2.2rem; color: var(--accent); margin-bottom: 8px; }
   header p { color: var(--muted); font-size: 1.1rem; }
+  .gspro-sticker {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #1a2332;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
   nav {
     display: flex;
     gap: 8px;
@@ -57,7 +79,7 @@
   .section { display: none; }
   .section.active { display: block; }
   .card {
-    background: var(--card);
+    background: rgba(26, 35, 50, 0.92);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px;
@@ -108,12 +130,14 @@
     th, td { padding: 8px 6px; font-size: 0.85rem; }
     .scorecard { font-size: 0.8rem; }
     .score-input { width: 30px; }
+    .gspro-sticker { position: static; display: inline-block; margin-bottom: 8px; }
   }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
+    <div class="gspro-sticker">GSPro</div>
     <h1>Thursday Night Sim League</h1>
     <p>Winter 2026–27 · GSPro · Flexible 12-player league</p>
     <p style="margin-top:8px; font-size:0.95rem;">Thursdays · Warm-up 7:00 PM · Tee-off 8:00 PM · 9 holes · Max 8 players per night · Top 6 scores count</p>
@@ -284,7 +308,7 @@ const leagueData = {
     course: "Georgia Golf Club (Augusta) – Front 9",
     confirmed: ["Dan Gudz", "Jamie Belanger", "Todd Brown", "Rick Markowski", "Luke Thompson"],
     maybe: ["Danny Cwiklik"],
-    par: [4, 5, 4, 3, 4, 3, 4, 5, 4] // Augusta Front 9 pars (adjust as needed)
+    par: [4, 5, 4, 3, 4, 3, 4, 5, 4]
   }
 };
 
