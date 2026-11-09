@@ -41,6 +41,7 @@
     position: relative;
   }
   header h1 { font-size: 2.2rem; color: var(--accent); margin-bottom: 8px; }
+  .boro-logo { max-width: 520px; height: auto; margin: 0 auto 12px; display: block; }
   header p { color: var(--muted); font-size: 1.1rem; }
   .gspro-logo {
     position: absolute;
@@ -141,7 +142,7 @@
   <header>
     <img src="gspro-logo.jpg" alt="GSPro" class="gspro-logo">
     <img src="trophy.jpg" alt="Boro Sim Tour Champion Trophy" class="trophy">
-    <h1>Boro Sim Tour League</h1>
+    <img src="boro-logo.jpg" alt="Boro Sim Tour League" class="boro-logo" style="max-width:480px; height:auto; margin: 0 auto 12px; display:block;">
     <p>Winter 2026–27 · GSPro</p>
     <p style="margin-top:8px; font-size:0.95rem;">Thursdays · Warm-up 7:00 PM · Tee-off 8:00 PM · 9 holes · Max 8 players per night</p>
   </header>
@@ -180,6 +181,7 @@
   <div id="current" class="section">
     <div class="card">
       <h2>Current Week</h2>
+      <img id="current-week-image" src="" alt="Course" style="width:100%; max-height:280px; object-fit:cover; border-radius:8px; margin-bottom:16px;">
       <p style="font-size:1.1rem; margin-bottom:16px;"><strong>Week 1 – Nov 12, 2026 – Georgia Golf Club (Augusta) Front 9</strong></p>
       <h3>Signed Up <span class="badge">5 confirmed</span> <span class="badge maybe">1 maybe</span></h3>
       <ul class="signup-list" id="signup-list"></ul>
@@ -391,6 +393,12 @@ function renderResults() {
 
 function renderCurrentWeek() {
   const cw = leagueData.currentWeek;
+  const sched = leagueData.schedule.find(s => s.week === cw.week);
+  const img = document.getElementById('current-week-image');
+  if (sched && sched.image && img) {
+    img.src = sched.image;
+    img.alt = sched.course;
+  }
   const list = document.getElementById('signup-list');
   list.innerHTML = [
     ...cw.confirmed.map(name => {
