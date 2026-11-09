@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boro Tour Sim League</title>
+<title>Boro Sim Tour League</title>
 <style>
   :root {
     --bg: #0f1419;
@@ -42,18 +42,19 @@
   }
   header h1 { font-size: 2.2rem; color: var(--accent); margin-bottom: 8px; }
   header p { color: var(--muted); font-size: 1.1rem; }
-  .gspro-sticker {
+  .gspro-logo {
     position: absolute;
     top: 16px;
     right: 16px;
-    background: #1a2332;
-    border: 2px solid var(--accent);
-    color: var(--accent);
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 6px 12px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
+    height: 42px;
+    width: auto;
+  }
+  .trophy {
+    width: 180px;
+    height: auto;
+    margin: 0 auto 16px;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
   }
   nav {
     display: flex;
@@ -130,17 +131,19 @@
     th, td { padding: 8px 6px; font-size: 0.85rem; }
     .scorecard { font-size: 0.8rem; }
     .score-input { width: 30px; }
-    .gspro-sticker { position: static; display: inline-block; margin-bottom: 8px; }
+    .gspro-logo { position: static; display: block; margin: 0 auto 12px; height: 36px; }
+    .trophy { width: 140px; }
   }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <div class="gspro-sticker">GSPro</div>
-    <h1>Boro Tour Sim League</h1>
-    <p>Winter 2026–27 · GSPro · Flexible 12-player league</p>
-    <p style="margin-top:8px; font-size:0.95rem;">Thursdays · Warm-up 7:00 PM · Tee-off 8:00 PM · 9 holes · Max 8 players per night · Top 6 scores count</p>
+    <img src="gspro-logo.jpg" alt="GSPro" class="gspro-logo">
+    <img src="trophy.jpg" alt="Boro Sim Tour Champion Trophy" class="trophy">
+    <h1>Boro Sim Tour League</h1>
+    <p>Winter 2026–27 · GSPro</p>
+    <p style="margin-top:8px; font-size:0.95rem;">Thursdays · Warm-up 7:00 PM · Tee-off 8:00 PM · 9 holes · Max 8 players per night</p>
   </header>
 
   <nav>
@@ -155,20 +158,22 @@
   <div id="leaderboard" class="section active">
     <div class="card">
       <h2>Season Standings</h2>
-      <p class="note">Points: 1st=10, 2nd=8, 3rd=6, 4th=5, 5th=4, 6th=3, 7th=2, 8th=1. Final standings use each player’s <strong>top 6 weekly point totals</strong>. If you play 8 weeks, only your best 6 count. Missing weeks do not hurt you. Championship Week is separate.</p>
+      <p class="note">Points: 1st=10, 2nd=8, 3rd=6, 4th=5, 5th=4, 6th=3, 7th=2, 8th=1. Final standings use each player’s <strong>top 6 weekly point totals</strong>. DNP = Did Not Play. Once a player has more than 6 scores, the lowest are struck out (not counted). Championship Week is separate.</p>
+      <div style="overflow-x:auto;">
       <table id="leaderboard-table">
         <thead>
           <tr>
             <th>Pos</th>
             <th>Player</th>
             <th>HCP</th>
-            <th>Weeks</th>
-            <th>Points</th>
-            <th>Avg Net</th>
+            <th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W5</th><th>W6</th>
+            <th>W7</th><th>W8</th><th>W9</th><th>W10</th><th>W11</th><th>W12</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
+      </div>
     </div>
   </div>
 
@@ -265,26 +270,25 @@
   </div>
 
   <footer>
-    Boro Tour Sim League · GSPro · Update scores after each round
+    Boro Sim Tour League · GSPro · Update scores after each round
   </footer>
 </div>
 
 <script>
-// ==================== LEAGUE DATA (EDIT THIS SECTION) ====================
 const leagueData = {
   players: [
-    { name: "Dan Gudz", hcp: 17, weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Tim Isgro", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Mat Zatarain", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Casey Mayo", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Todd Brown", hcp: 3, weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Danny Cwiklik", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Rick Markowski", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Dave Mann", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Luke Thompson", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Doug Ruffing", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Nick Hirth", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 },
-    { name: "Jamie Belanger", hcp: "TBD", weeksPlayed: 0, points: 0, totalNet: 0 }
+    { name: "Dan Gudz", hcp: 17, weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Tim Isgro", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Mat Zatarain", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Casey Mayo", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Todd Brown", hcp: 3, weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Danny Cwiklik", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Rick Markowski", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Dave Mann", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Luke Thompson", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Doug Ruffing", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Nick Hirth", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Jamie Belanger", hcp: "TBD", weeklyPoints: [null,null,null,null,null,null,null,null,null,null,null,null] }
   ],
   schedule: [
     { week: 1, date: "Nov 12, 2026", course: "Georgia Golf Club (Augusta) – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/mOLTx.jpg" },
@@ -312,7 +316,6 @@ const leagueData = {
   }
 };
 
-// ==================== RENDER FUNCTIONS ====================
 function show(section) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -322,17 +325,38 @@ function show(section) {
 
 function renderLeaderboard() {
   const tbody = document.querySelector('#leaderboard-table tbody');
-  const sorted = [...leagueData.players].sort((a, b) => b.points - a.points || a.totalNet - b.totalNet);
-  tbody.innerHTML = sorted.map((p, i) => `
+  const playersWithTotals = leagueData.players.map(p => {
+    const weekly = p.weeklyPoints || Array(12).fill(null);
+    const played = weekly.filter(s => s !== null && s !== 'DNP');
+    let top6 = [...played].sort((a,b) => b - a).slice(0, 6);
+    const total = top6.reduce((a,b) => a + b, 0);
+    return { ...p, weekly, total };
+  });
+  const sorted = playersWithTotals.sort((a, b) => b.total - a.total);
+
+  tbody.innerHTML = sorted.map((p, i) => {
+    const weekly = p.weekly;
+    const playedScores = weekly.map((s, idx) => s !== null && s !== 'DNP' ? {score: s, idx} : null).filter(Boolean);
+    const sortedPlayed = [...playedScores].sort((a,b) => b.score - a.score);
+    const dropIndices = new Set();
+    if (playedScores.length > 6) {
+      sortedPlayed.slice(6).forEach(item => dropIndices.add(item.idx));
+    }
+    const cells = weekly.map((s, idx) => {
+      if (s === null || s === undefined) return '<td>-</td>';
+      if (s === 'DNP') return '<td>DNP</td>';
+      const dropped = dropIndices.has(idx);
+      return `<td${dropped ? ' style="text-decoration:line-through; color:#666;"' : ''}>${s}</td>`;
+    }).join('');
+    return `
     <tr>
       <td class="pos">${i + 1}</td>
       <td>${p.name} <span style="color:#8b9bb4; font-size:0.85em;">(<input type="text" value="${p.hcp}" data-player="${p.name}" onchange="updateHcp(this)" style="width:50px; background:#0f1419; color:#e8eef4; border:1px solid #2a3a4d; border-radius:4px; padding:2px 4px; text-align:center;">)</span></td>
       <td>${p.hcp}</td>
-      <td>${p.weeksPlayed}</td>
-      <td><strong>${p.points}</strong></td>
-      <td>${p.weeksPlayed ? (p.totalNet / p.weeksPlayed).toFixed(1) : '-'}</td>
-    </tr>
-  `).join('');
+      ${cells}
+      <td><strong>${p.total}</strong></td>
+    </tr>`;
+  }).join('');
 }
 
 function renderSchedule() {
@@ -369,7 +393,6 @@ function renderResults() {
 function renderCurrentWeek() {
   const cw = leagueData.currentWeek;
   const list = document.getElementById('signup-list');
-  const allPlaying = [...cw.confirmed, ...cw.maybe];
   list.innerHTML = [
     ...cw.confirmed.map(name => {
       const p = leagueData.players.find(x => x.name === name);
@@ -385,7 +408,7 @@ function renderCurrentWeek() {
   const parTotal = cw.par.reduce((a,b)=>a+b,0);
   let html = `<tr><td><strong>Par</strong></td>${cw.par.map(p=>`<td>${p}</td>`).join('')}<td><strong>${parTotal}</strong></td></tr>`;
 
-  allPlaying.forEach(name => {
+  [...cw.confirmed, ...cw.maybe].forEach(name => {
     const p = leagueData.players.find(x => x.name === name);
     const hcp = p ? p.hcp : 'TBD';
     const isMaybe = cw.maybe.includes(name);
@@ -428,7 +451,6 @@ function loadSavedHcps() {
   });
 }
 
-// Initial render
 loadSavedHcps();
 renderLeaderboard();
 renderSchedule();
