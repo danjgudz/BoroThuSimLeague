@@ -193,7 +193,7 @@
       <p style="font-size:1.1rem; margin-bottom:16px;"><strong>Week 1 – Nov 12, 2026 – Georgia Golf Club (Augusta) Front 9</strong></p>
       <h3>Signed Up <span class="badge">7 confirmed</span> <span class="badge maybe">1 maybe</span></h3>
       <ul class="signup-list" id="signup-list"></ul>
-      <p class="note">1 spot still open. Danny is a maybe.</p>
+      <p class="note">Completed 5 holes. Scores shown below.</p>
     </div>
     <div class="card">
       <h2>Scorecard – Augusta Front 9</h2>
@@ -209,7 +209,7 @@
           <tbody id="scorecard-body"></tbody>
         </table>
       </div>
-      <p class="note">Enter scores in the boxes. Totals update automatically. Par is set for Augusta Front 9 (adjust if needed).</p>
+      <p class="note">Week 1 results – 5 holes completed. X = hole not played. Points awarded on net scores.</p>
     </div>
   </div>
 
@@ -320,8 +320,8 @@ const leagueData = {
     week: 1,
     date: "Nov 12, 2026",
     course: "Georgia Golf Club (Augusta) – Front 9",
-    confirmed: ["Dan Gudz", "Jamie Belanger", "Todd Brown", "Rick Markowski", "Luke Thompson", "Doug Ruffing", "Mat Zatarain"],
-    maybe: ["Danny Cwiklik"],
+    confirmed: ["Dan Gudz", "Doug Ruffing", "Rick Markowski", "Jamie Belanger", "Luke Thompson", "Mat Zatarain", "Todd Brown"],
+    maybe: [],
     par: [4, 5, 4, 3, 4, 3, 4, 5, 4]
   }
 };
@@ -422,18 +422,24 @@ function renderCurrentWeek() {
   ].join('');
 
   const tbody = document.getElementById('scorecard-body');
-  const parTotal = cw.par.reduce((a,b)=>a+b,0);
-  let html = `<tr><td><strong>Par</strong></td>${cw.par.map(p=>`<td>${p}</td>`).join('')}<td><strong>${parTotal}</strong></td></tr>`;
+  const par = [4,5,4,3,4,3,4,5,4];
+  const parTotal = 36;
+  let html = `<tr><td><strong>Par</strong></td>${par.map(p=>`<td>${p}</td>`).join('')}<td><strong>${parTotal}</strong></td></tr>`;
 
-  [...cw.confirmed, ...cw.maybe].forEach(name => {
-    const p = leagueData.players.find(x => x.name === name);
-    const hcp = p ? p.hcp : 'TBD';
-    const isMaybe = cw.maybe.includes(name);
-    html += `<tr${isMaybe ? ' style="opacity:0.75"' : ''}>
-      <td>${name}${isMaybe ? ' (maybe)' : ''} (${hcp})</td>
-      ${cw.par.map((_,i)=>`<td><input type="number" class="score-input" data-player="${name}" data-hole="${i}" min="1" max="15" onchange="updateScore(this)"></td>`).join('')}
-      <td id="out-${name.replace(/\s+/g,'')}"><strong>-</strong></td>
-    </tr>`;
+  const scores = [
+    { name: "Dan Gudz", hcp: 17, gross: [6,5,5,4,5,"X","X","X","X"], net: [5,4,4,3,4,"X","X","X","X"], grossOut: 25, netOut: 20 },
+    { name: "Doug Ruffing", hcp: "TBD", gross: [6,6,6,5,6,"X","X","X","X"], net: [4,4,5,4,4,"X","X","X","X"], grossOut: 29, netOut: 21 },
+    { name: "Rick Markowski", hcp: 24, gross: [6,6,6,4,5,"X","X","X","X"], net: [5,5,5,3,4,"X","X","X","X"], grossOut: 27, netOut: 22 },
+    { name: "Jamie Belanger", hcp: 15, gross: [6,7,6,4,5,"X","X","X","X"], net: [5,6,5,3,4,"X","X","X","X"], grossOut: 28, netOut: 23 },
+    { name: "Luke Thompson", hcp: 22, gross: [6,7,6,5,6,"X","X","X","X"], net: [5,5,5,4,5,"X","X","X","X"], grossOut: 30, netOut: 24 },
+    { name: "Mat Zatarain", hcp: 14, gross: [6,5,6,5,6,"X","X","X","X"], net: [5,4,5,5,5,"X","X","X","X"], grossOut: 28, netOut: 24 },
+    { name: "Todd Brown", hcp: 3, gross: [6,6,5,4,5,"X","X","X","X"], net: [6,5,5,4,5,"X","X","X","X"], grossOut: 26, netOut: 25 }
+  ];
+
+  scores.forEach(s => {
+    html += `<tr><td colspan="11" style="background:rgba(61,214,140,0.12); font-weight:700; padding:8px 10px;">${s.name}</td></tr>`;
+    html += `<tr><td style="padding-left:16px;">Gross</td>${s.gross.map(h=>`<td>${h}</td>`).join('')}<td><strong>${s.grossOut}</strong></td></tr>`;
+    html += `<tr style="background:rgba(255,255,255,0.04);"><td style="padding-left:16px;">Net</td>${s.net.map(h=>`<td>${h}</td>`).join('')}<td><strong>${s.netOut}</strong></td></tr>`;
   });
   tbody.innerHTML = html;
 }
