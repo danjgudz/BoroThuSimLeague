@@ -190,13 +190,13 @@
     <div class="card">
       <h2>Current Week</h2>
       <img id="current-week-image" src="" alt="Course" style="width:100%; max-height:280px; object-fit:cover; border-radius:8px; margin-bottom:16px;">
-      <p style="font-size:1.1rem; margin-bottom:16px;"><strong>Week 1 – Nov 12, 2026 – Georgia Golf Club (Augusta) Front 9</strong></p>
-      <h3>Signed Up <span class="badge">7 confirmed</span> <span class="badge maybe">1 maybe</span></h3>
+      <p style="font-size:1.1rem; margin-bottom:16px;"><strong>Week 2 – Nov 19, 2026 – DPC Pebble (Pebble Beach) Front 9</strong></p>
+      <h3>Signed Up <span class="badge">5 confirmed</span> <span class="badge maybe">1 maybe</span></h3>
       <ul class="signup-list" id="signup-list"></ul>
-      <p class="note">Completed 5 holes. Scores shown below.</p>
+      <p class="note">3 spots still open. Jamie is a maybe.</p>
     </div>
     <div class="card">
-      <h2>Scorecard – Augusta Front 9</h2>
+      <h2>Scorecard – Pebble Beach Front 9</h2>
       <div style="overflow-x:auto;">
         <table class="scorecard" id="scorecard">
           <thead>
@@ -209,7 +209,7 @@
           <tbody id="scorecard-body"></tbody>
         </table>
       </div>
-      <p class="note">Week 1 results – 5 holes completed. X = hole not played. Points awarded on net scores.</p>
+      <p class="note">Enter scores after the round. Totals update automatically.</p>
     </div>
   </div>
 
@@ -288,7 +288,7 @@
 const leagueData = {
   players: [
     { name: "Dan Gudz", hcp: 17, weeklyPoints: [10,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Tim Isgro", hcp: "TBD", weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Tim Isgro", hcp: 24, weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Mat Zatarain", hcp: 14, weeklyPoints: [3.5,null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Casey Mayo", hcp: "TBD", weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
     { name: "Todd Brown", hcp: 3, weeklyPoints: [2,null,null,null,null,null,null,null,null,null,null,null] },
@@ -301,7 +301,7 @@ const leagueData = {
     { name: "Jamie Belanger", hcp: 15, weeklyPoints: [5,null,null,null,null,null,null,null,null,null,null,null] }
   ],
   schedule: [
-    { week: 1, date: "Nov 12, 2026", course: "Georgia Golf Club (Augusta) – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/mOLTx.jpg" },
+    { week: 1, date: "Nov 12, 2026", course: "Georgia Golf Club (Augusta) – Front 9", status: "Complete", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/mOLTx.jpg" },
     { week: 2, date: "Nov 19, 2026", course: "DPC Pebble (Pebble Beach) – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/u99SM.jpg" },
     { week: 3, date: "Dec 3, 2026", course: "Bethpage Black – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/4Ma5H.jpg" },
     { week: 4, date: "Dec 10, 2026", course: "TPC Sawgrass – Back 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/RT14y.jpg" },
@@ -332,12 +332,12 @@ const leagueData = {
     }
   ],
   currentWeek: {
-    week: 1,
-    date: "Nov 12, 2026",
-    course: "Georgia Golf Club (Augusta) – Front 9",
-    confirmed: ["Dan Gudz", "Doug Ruffing", "Rick Markowski", "Jamie Belanger", "Luke Thompson", "Mat Zatarain", "Todd Brown"],
-    maybe: [],
-    par: [4, 5, 4, 3, 4, 3, 4, 5, 4]
+    week: 2,
+    date: "Nov 19, 2026",
+    course: "DPC Pebble (Pebble Beach) – Front 9",
+    confirmed: ["Dan Gudz", "Rick Markowski", "Todd Brown", "Luke Thompson", "Tim Isgro"],
+    maybe: ["Jamie Belanger"],
+    par: [4, 5, 4, 4, 3, 5, 3, 4, 4]
   }
 };
 
@@ -437,25 +437,22 @@ function renderCurrentWeek() {
   ].join('');
 
   const tbody = document.getElementById('scorecard-body');
-  const par = [4,5,4,3,4,3,4,5,4];
-  const parTotal = 36;
+  const par = cw.par;
+  const parTotal = par.reduce((a,b)=>a+b,0);
   let html = `<tr><td><strong>Par</strong></td>${par.map(p=>`<td>${p}</td>`).join('')}<td><strong>${parTotal}</strong></td></tr>`;
 
-  const scores = [
-    { name: "Dan Gudz", hcp: 17, gross: [6,5,5,4,5,"X","X","X","X"], net: [5,4,4,3,4,"X","X","X","X"], grossOut: 25, netOut: 20 },
-    { name: "Doug Ruffing", hcp: "TBD", gross: [6,6,6,5,6,"X","X","X","X"], net: [4,4,5,4,4,"X","X","X","X"], grossOut: 29, netOut: 21 },
-    { name: "Rick Markowski", hcp: 24, gross: [6,6,6,4,5,"X","X","X","X"], net: [5,5,5,3,4,"X","X","X","X"], grossOut: 27, netOut: 22 },
-    { name: "Jamie Belanger", hcp: 15, gross: [6,7,6,4,5,"X","X","X","X"], net: [5,6,5,3,4,"X","X","X","X"], grossOut: 28, netOut: 23 },
-    { name: "Luke Thompson", hcp: 22, gross: [6,7,6,5,6,"X","X","X","X"], net: [5,5,5,4,5,"X","X","X","X"], grossOut: 30, netOut: 24 },
-    { name: "Mat Zatarain", hcp: 14, gross: [6,5,6,5,6,"X","X","X","X"], net: [5,4,5,5,5,"X","X","X","X"], grossOut: 28, netOut: 24 },
-    { name: "Todd Brown", hcp: 3, gross: [6,6,5,4,5,"X","X","X","X"], net: [6,5,5,4,5,"X","X","X","X"], grossOut: 26, netOut: 25 }
-  ];
-
-  scores.forEach(s => {
-    html += `<tr><td colspan="11" style="background:rgba(61,214,140,0.12); font-weight:700; padding:8px 10px;">${s.name}</td></tr>`;
-    html += `<tr><td style="padding-left:16px;">Gross</td>${s.gross.map(h=>`<td>${h}</td>`).join('')}<td><strong>${s.grossOut}</strong></td></tr>`;
-    html += `<tr style="background:rgba(255,255,255,0.04);"><td style="padding-left:16px;">Net</td>${s.net.map(h=>`<td>${h}</td>`).join('')}<td><strong>${s.netOut}</strong></td></tr>`;
-  });
+  const players = [...cw.confirmed, ...cw.maybe];
+  if (players.length === 0) {
+    html += `<tr><td colspan="11" class="note" style="text-align:center; padding:20px;">No players signed up yet. Scores will appear here once the group is set.</td></tr>`;
+  } else {
+    players.forEach(name => {
+      const p = leagueData.players.find(x => x.name === name);
+      const hcp = p ? p.hcp : 'TBD';
+      html += `<tr><td colspan="11" style="background:rgba(61,214,140,0.12); font-weight:700; padding:8px 10px;">${name} (${hcp})</td></tr>`;
+      html += `<tr><td style="padding-left:16px;">Gross</td>${par.map((_,i)=>`<td><input type="number" class="score-input" data-player="${name}" data-hole="${i}" min="1" max="15" onchange="updateScore(this)"></td>`).join('')}<td id="out-${name.replace(/\s+/g,'')}-g"><strong>-</strong></td></tr>`;
+      html += `<tr style="background:rgba(255,255,255,0.04);"><td style="padding-left:16px;">Net</td>${par.map((_,i)=>`<td><input type="number" class="score-input" data-player="${name}" data-hole="${i}" min="1" max="15" onchange="updateScore(this)"></td>`).join('')}<td id="out-${name.replace(/\s+/g,'')}-n"><strong>-</strong></td></tr>`;
+    });
+  }
   tbody.innerHTML = html;
 }
 
