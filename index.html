@@ -190,13 +190,13 @@
     <div class="card">
       <h2>Current Week</h2>
       <img id="current-week-image" src="" alt="Course" style="width:100%; max-height:280px; object-fit:cover; border-radius:8px; margin-bottom:16px;">
-      <p style="font-size:1.1rem; margin-bottom:16px;"><strong>Week 2 – Nov 19, 2026 – DPC Pebble (Pebble Beach) Front 9</strong></p>
-      <h3>Signed Up <span class="badge">5 confirmed</span> <span class="badge maybe">1 maybe</span></h3>
+      <p style="font-size:1.1rem; margin-bottom:16px;"><strong>Week 3 – Dec 3, 2026 – Bethpage Black Front 9</strong></p>
+      <h3>Signed Up <span class="badge">0 confirmed</span></h3>
       <ul class="signup-list" id="signup-list"></ul>
-      <p class="note">3 spots still open. Jamie is a maybe.</p>
+      <p class="note">Sign-ups open. Priority to players who sat out last week.</p>
     </div>
     <div class="card">
-      <h2>Scorecard – Pebble Beach Front 9</h2>
+      <h2>Scorecard – Bethpage Black Front 9</h2>
       <div style="overflow-x:auto;">
         <table class="scorecard" id="scorecard">
           <thead>
@@ -287,22 +287,22 @@
 <script>
 const leagueData = {
   players: [
-    { name: "Dan Gudz", hcp: 17, weeklyPoints: [10,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Tim Isgro", hcp: 24, weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Mat Zatarain", hcp: 14, weeklyPoints: [3.5,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Casey Mayo", hcp: "TBD", weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Todd Brown", hcp: 3, weeklyPoints: [2,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Danny Cwiklik", hcp: "TBD", weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Rick Markowski", hcp: 24, weeklyPoints: [6,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Dave Mann", hcp: "TBD", weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Luke Thompson", hcp: 22, weeklyPoints: [3.5,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Doug Ruffing", hcp: "TBD", weeklyPoints: [8,null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Nick Hirth", hcp: 3, weeklyPoints: ['DNP',null,null,null,null,null,null,null,null,null,null,null] },
-    { name: "Jamie Belanger", hcp: 15, weeklyPoints: [5,null,null,null,null,null,null,null,null,null,null,null] }
+    { name: "Dan Gudz", hcp: 17, weeklyPoints: [10,10,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Tim Isgro", hcp: 24, weeklyPoints: ['DNP',6,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Mat Zatarain", hcp: 14, weeklyPoints: [3.5,'DNP',null,null,null,null,null,null,null,null,null,null] },
+    { name: "Casey Mayo", hcp: "TBD", weeklyPoints: ['DNP','DNP',null,null,null,null,null,null,null,null,null,null] },
+    { name: "Todd Brown", hcp: 3, weeklyPoints: [2,4.5,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Danny Cwiklik", hcp: "TBD", weeklyPoints: ['DNP','DNP',null,null,null,null,null,null,null,null,null,null] },
+    { name: "Rick Markowski", hcp: 24, weeklyPoints: [6,8,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Dave Mann", hcp: "TBD", weeklyPoints: ['DNP','DNP',null,null,null,null,null,null,null,null,null,null] },
+    { name: "Luke Thompson", hcp: 22, weeklyPoints: [3.5,4.5,null,null,null,null,null,null,null,null,null,null] },
+    { name: "Doug Ruffing", hcp: "TBD", weeklyPoints: [8,'DNP',null,null,null,null,null,null,null,null,null,null] },
+    { name: "Nick Hirth", hcp: 3, weeklyPoints: ['DNP','DNP',null,null,null,null,null,null,null,null,null,null] },
+    { name: "Jamie Belanger", hcp: 15, weeklyPoints: [5,'DNP',null,null,null,null,null,null,null,null,null,null] }
   ],
   schedule: [
     { week: 1, date: "Nov 12, 2026", course: "Georgia Golf Club (Augusta) – Front 9", status: "Complete", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/mOLTx.jpg" },
-    { week: 2, date: "Nov 19, 2026", course: "DPC Pebble (Pebble Beach) – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/u99SM.jpg" },
+    { week: 2, date: "Nov 19, 2026", course: "DPC Pebble (Pebble Beach) – Front 9", status: "Complete", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/u99SM.jpg" },
     { week: 3, date: "Dec 3, 2026", course: "Bethpage Black – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/4Ma5H.jpg" },
     { week: 4, date: "Dec 10, 2026", course: "TPC Sawgrass – Back 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/RT14y.jpg" },
     { week: 5, date: "Dec 17, 2026", course: "Whistling Straits – Front 9", status: "Upcoming", image: "https://raw.githubusercontent.com/danjgudz/BoroThuSimLeague/main/searched_images/Qdd0n.jpg" },
@@ -329,15 +329,27 @@ const leagueData = {
         { name: "Mat Zatarain", gross: 28, net: 24, points: 3.5 },
         { name: "Todd Brown", gross: 26, net: 25, points: 2 }
       ]
+    },
+    {
+      week: 2,
+      date: "Nov 19, 2026",
+      course: "DPC Pebble (Pebble Beach) – Front 9",
+      scores: [
+        { name: "Dan Gudz", gross: 40, net: 32, points: 10 },
+        { name: "Rick Markowski", gross: 47, net: 38, points: 8 },
+        { name: "Tim Isgro", gross: 54, net: 42, points: 6 },
+        { name: "Luke Thompson", gross: 54, net: 43, points: 4.5 },
+        { name: "Todd Brown", gross: 45, net: 43, points: 4.5 }
+      ]
     }
   ],
   currentWeek: {
-    week: 2,
-    date: "Nov 19, 2026",
-    course: "DPC Pebble (Pebble Beach) – Front 9",
-    confirmed: ["Dan Gudz", "Rick Markowski", "Todd Brown", "Luke Thompson", "Tim Isgro"],
-    maybe: ["Jamie Belanger"],
-    par: [4, 5, 4, 4, 3, 5, 3, 4, 4]
+    week: 3,
+    date: "Dec 3, 2026",
+    course: "Bethpage Black – Front 9",
+    confirmed: [],
+    maybe: [],
+    par: [4, 4, 3, 5, 4, 4, 4, 3, 4]
   }
 };
 
